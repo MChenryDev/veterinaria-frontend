@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
 
-function App() {
+import React from 'react';
+import DuenioList from './components/DuenioList';
+import DuenioForm from './components/DuenioForm';
+import CrearMascota from './components/Mascota/CrearMascota';
+import ListarMascotas from './components/Mascota/ListarMascotas';
+import CrearCita from './components/Cita/CrearCita';
+import ListarCitas from './components/Cita/ListarCitas';
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Gestión Veterinaria</h1>
+      <CrearMascota />
+      <ListarMascotas />
+      <CrearCita />
+      <ListarCitas />
     </div>
   );
-}
+};
 
 export default App;
+
