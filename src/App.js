@@ -7,15 +7,25 @@ import CrearMascota from './components/Mascota/CrearMascota';
 import ListarMascotas from './components/Mascota/ListarMascotas';
 import CrearCita from './components/Cita/CrearCita';
 import ListarCitas from './components/Cita/ListarCitas';
-
+import Facturacion from './components/Facturacion/Facturacion';
+import Facturas from './components/Facturacion/Facturas';
+import Productos from './components/Facturacion/Productos';
+/*import FacturaEdit from './components/Facturacion/FacturaEdit';*/
+/*
+      <CrearMascota />
+      <ListarMascotas />
+      <CrearCita /> 
+            <FacturaEdit />
+*/
 const App = () => {
   return (
     <div>
       <h1>Gestión Veterinaria</h1>
-      <CrearMascota />
-      <ListarMascotas />
-      <CrearCita />
+      
       <ListarCitas />
+      <Facturacion />
+      <Facturas />
+
     </div>
   );
 };
