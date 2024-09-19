@@ -1,10 +1,12 @@
 // src/components/Facturas.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Facturas = () => {
     const [facturas, setFacturas] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Obtener facturas desde el backend
@@ -31,6 +33,10 @@ const Facturas = () => {
         }
     };
 
+    const handleEdit = (id) => {
+        navigate(`/edit/${id}`);
+    };
+
     if (loading) {
         return <p>Cargando facturas...</p>;
     }
@@ -52,6 +58,7 @@ const Facturas = () => {
                             </li>
                         ))}
                     </ul>
+                    <button onClick={() => handleEdit(factura.ID_Factura)}>Editar</button>
                     <button onClick={() => handleDelete(factura.ID_Factura)}>Eliminar</button>
                 </div>
             ))}
