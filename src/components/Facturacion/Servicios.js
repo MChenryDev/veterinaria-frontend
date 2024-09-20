@@ -37,6 +37,7 @@ const Servicios = ({ agregarServicio }) => {
         ))}
       </select>
 
+      <label>Cantidad:</label>
       <input
         type="number"
         min="1"

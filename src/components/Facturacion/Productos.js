@@ -37,6 +37,7 @@ const Productos = ({ agregarProducto }) => {
         ))}
       </select>
 
+      <label>Cantidad:</label>
       <input
         type="number"
         min="1"

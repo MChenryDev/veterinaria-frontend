@@ -1,12 +1,11 @@
-// src/components/Facturacion/FacturaEdit.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import '../../App.css'; // Asegúrate de importar los estilos
 
 const FacturaEdit = () => {
     const { id } = useParams();
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     const [factura, setFactura] = useState(null);
     const [detalles, setDetalles] = useState([]);
 
@@ -24,7 +23,8 @@ const FacturaEdit = () => {
         fetchFactura();
     }, [id]);
 
-    const handleSave = async () => {
+    const handleSave = async (e) => {
+        e.preventDefault(); // Evitar que se envíe el formulario por defecto
         try {
             await axios.put(`http://localhost:3000/api/facturas/${id}`, { ...factura, detalles });
             navigate('/facturas'); // Redirigir a /facturas después de guardar
@@ -39,11 +39,13 @@ const FacturaEdit = () => {
         setDetalles(newDetalles);
     };
 
-    const addDetail = () => {
-        setDetalles([...detalles, { TIPO: 'P', ID_Producto: null, ID_Servicio: null, cantidad: 1, precio: 0 }]);
+    const addDetail = (e) => {
+        e.preventDefault();
+        setDetalles([...detalles, { Tipo: 'P', ID_Producto: null, ID_Servicio: null, Cantidad: 1, Precio: 0 }]);
     };
 
-    const removeDetail = (index) => {
+    const removeDetail = (e, index) => {
+        e.preventDefault();
         const newDetalles = detalles.filter((_, i) => i !== index);
         setDetalles(newDetalles);
     };
@@ -51,29 +53,29 @@ const FacturaEdit = () => {
     if (!factura) return <div>Cargando...</div>;
 
     return (
-        <div>
+        <div className="container">
             <h1>Editar Factura {factura.ID_Factura}</h1>
-            <div>
-                <label>Fecha: </label>
-                <input 
-                    type="text" 
-                    value={factura.Fecha} 
-                    onChange={(e) => setFactura({ ...factura, Fecha: e.target.value })} 
-                />
-            </div>
-            <div>
-                <label>Monto Total: </label>
-                <input 
-                    type="number" 
-                    value={factura.Monto_Total} 
-                    onChange={(e) => setFactura({ ...factura, Monto_Total: e.target.value })} 
-                />
-            </div>
-            <div>
+            <form onSubmit={handleSave} className="card">
+                <div>
+                    <label>Fecha: </label>
+                    <input 
+                        type="text" 
+                        value={factura.Fecha} 
+                        onChange={(e) => setFactura({ ...factura, Fecha: e.target.value })} 
+                    />
+                </div>
+                <div>
+                    <label>Monto Total: </label>
+                    <input 
+                        type="number" 
+                        value={factura.Monto_Total} 
+                        onChange={(e) => setFactura({ ...factura, Monto_Total: e.target.value })} 
+                    />
+                </div>
                 <h3>Detalles de la Factura</h3>
                 {detalles.length > 0 ? (
                     detalles.map((detalle, index) => (
-                        <div key={index} style={{ marginBottom: '10px' }}>
+                        <div key={index} className="card" style={{ marginBottom: '10px' }}>
                             <label>Tipo: </label>
                             <select
                                 value={detalle.Tipo}
@@ -115,15 +117,19 @@ const FacturaEdit = () => {
                                 value={detalle.Precio} 
                                 onChange={(e) => handleDetailChange(index, 'Precio', e.target.value)} 
                             />
-                            <button onClick={() => removeDetail(index)}>Eliminar Detalle</button>
+                            <button className="action-button" onClick={(e) => removeDetail(e, index)}>Eliminar Detalle</button>
                         </div>
                     ))
                 ) : (
                     <div>No hay detalles disponibles para esta factura.</div>
                 )}
-                <button onClick={addDetail}>Añadir Detalle</button>
-            </div>
-            <button onClick={handleSave}>Guardar Cambios</button>
+                <div className="action-buttons">
+                    <button onClick={addDetail}>Añadir Detalle</button>
+                </div>
+                <div className="action-buttons">
+                    <button type="submit">Guardar Cambios</button>
+                </div>
+            </form>
         </div>
     );
 };
