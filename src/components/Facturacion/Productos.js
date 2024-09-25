@@ -1,4 +1,3 @@
-// src/components/Facturacion/Productos.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -14,13 +13,14 @@ const Productos = ({ agregarProducto }) => {
       .catch(error => console.log(error));
   }, []);
 
-  const handleSeleccionarProducto = () => {
+  const handleSeleccionarProducto = (event) => {
+    event.preventDefault(); // Prevenir comportamiento por defecto
     if (productoSeleccionado && cantidad > 0) {
       agregarProducto({
         Tipo: 'P',
-        ID_Producto: productoSeleccionado.ID_Producto, // Usamos el ID del inventario
+        ID_Producto: productoSeleccionado.ID_Producto,
         Cantidad: cantidad,
-        Precio: productoSeleccionado.Precio_Unitario // Usamos el precio unitario del inventario
+        Precio: productoSeleccionado.Precio_Unitario
       });
     }
   };

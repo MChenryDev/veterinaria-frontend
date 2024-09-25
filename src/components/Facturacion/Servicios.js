@@ -1,4 +1,3 @@
-// src/components/Facturacion/Servicios.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -14,7 +13,8 @@ const Servicios = ({ agregarServicio }) => {
       .catch(error => console.log(error));
   }, []);
 
-  const handleSeleccionarServicio = () => {
+  const handleSeleccionarServicio = (event) => {
+    event.preventDefault(); // Prevenir comportamiento por defecto
     if (servicioSeleccionado && cantidad > 0) {
       agregarServicio({
         Tipo: 'S',
