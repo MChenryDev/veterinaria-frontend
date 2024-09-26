@@ -24,6 +24,20 @@ const VeterinariosChart = () => {
 
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
+    // Función para descargar los datos en CSV
+    const downloadCSV = () => {
+        const csvData = data.map(row => `${row.name},${row.value}`).join('\n');
+        const csvContent = `data:text/csv;charset=utf-8,Especialidad,Cantidad\n${csvData}`;
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', 'veterinarios_reporte.csv');
+        document.body.appendChild(link); // Requerido para que funcione en Firefox
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div>
             <h2>Veterinarios por Especialidad</h2>
@@ -38,6 +52,7 @@ const VeterinariosChart = () => {
                 <Legend />
             </PieChart>
             </ResponsiveContainer>
+            <button onClick={downloadCSV}>Descargar CSV</button>
         </div>
     );
 };

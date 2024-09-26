@@ -22,6 +22,20 @@ const MascotasChart = () => {
             });
     }, []);
 
+    // Función para descargar los datos en CSV
+    const downloadCSV = () => {
+        const csvData = data.map(row => `${row.especie},${row.cantidad}`).join('\n');
+        const csvContent = `data:text/csv;charset=utf-8,Especie,Cantidad\n${csvData}`;
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', 'mascotas_reporte.csv');
+        document.body.appendChild(link); // Requerido para que funcione en Firefox
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div>
             <h2>Mascotas por Especie</h2>
@@ -35,6 +49,7 @@ const MascotasChart = () => {
                     <Bar dataKey="cantidad" fill="#8884d8" />
                 </BarChart>
             </ResponsiveContainer>
+            <button onClick={downloadCSV}>Descargar CSV</button>
         </div>
     );
 };

@@ -24,6 +24,20 @@ const CitasChart = () => {
             });
     }, []);
 
+    // Función para descargar los datos en CSV
+    const downloadCSV = () => {
+        const csvData = data.map(row => `${row.estado},${row.cantidad}`).join('\n');
+        const csvContent = `data:text/csv;charset=utf-8,Estado,Cantidad\n${csvData}`;
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', 'citas_reporte.csv');
+        document.body.appendChild(link); // Requerido para que funcione en Firefox
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div>
             <h2>Citas por Estado</h2>
@@ -37,6 +51,7 @@ const CitasChart = () => {
                     <Bar dataKey="cantidad" fill="#82ca9d" />
                 </BarChart>
             </ResponsiveContainer>
+            <button onClick={downloadCSV}>Descargar CSV</button>
         </div>
     );
 };
