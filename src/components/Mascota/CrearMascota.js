@@ -36,6 +36,7 @@ const CrearMascota = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <h2>Creación Mascota</h2>
       <input
         type="text"
         name="Nombre"

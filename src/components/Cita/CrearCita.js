@@ -34,6 +34,7 @@ const CrearCita = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <h2>Creación Cita</h2>
       <input
         type="datetime-local"
         name="Fecha_Hora"
