@@ -8,8 +8,28 @@ const FacturaEdit = () => {
     const navigate = useNavigate();
     const [factura, setFactura] = useState(null);
     const [detalles, setDetalles] = useState([]);
+    const [productos, setProductos] = useState([]);
+    const [servicios, setServicios] = useState([]);
 
     useEffect(() => {
+        const fetchProductos = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/inventarios');
+                setProductos(response.data);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        };
+        
+        const fetchServicios = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/servicios');
+                setServicios(response.data);
+            } catch (error) {
+                console.error('Error fetching services:', error);
+            }
+        };
+
         const fetchFactura = async () => {
             try {
                 const response = await axios.get(`http://localhost:3000/api/facturas/${id}`);
@@ -20,14 +40,16 @@ const FacturaEdit = () => {
             }
         };
 
+        fetchProductos();
+        fetchServicios();
         fetchFactura();
     }, [id]);
 
     const handleSave = async (e) => {
-        e.preventDefault(); // Evitar que se envíe el formulario por defecto
+        e.preventDefault();
         try {
             await axios.put(`http://localhost:3000/api/facturas/${id}`, { ...factura, detalles });
-            navigate('/facturas'); // Redirigir a /facturas después de guardar
+            navigate('/facturas');
         } catch (error) {
             console.error('Error al actualizar la factura', error);
         }
@@ -74,52 +96,52 @@ const FacturaEdit = () => {
                 </div>
                 <h3>Detalles de la Factura</h3>
                 {detalles.length > 0 ? (
-                    detalles.map((detalle, index) => (
-                        <div key={index} className="card" style={{ marginBottom: '10px' }}>
-                            <label>Tipo: </label>
-                            <select
-                                value={detalle.Tipo}
-                                onChange={(e) => handleDetailChange(index, 'Tipo', e.target.value)}
-                            >
-                                <option value="P">Producto</option>
-                                <option value="S">Servicio</option>
-                            </select>
+                    detalles.map((detalle, index) => {
+                        const opciones = detalle.Tipo === 'P' ? productos : servicios;
+                        const selectedId = detalle.Tipo === 'P' ? detalle.ID_Producto : detalle.ID_Servicio;
 
-                            {detalle.Tipo === 'P' ? (
+                        return (
+                            <div key={index} className="card" style={{ marginBottom: '10px' }}>
+                                <label>Tipo: </label>
+                                <select
+                                    value={detalle.Tipo}
+                                    onChange={(e) => handleDetailChange(index, 'Tipo', e.target.value)}
+                                >
+                                    <option value="P">Producto</option>
+                                    <option value="S">Servicio</option>
+                                </select>
+
                                 <div>
-                                    <label>ID Producto: </label>
-                                    <input
-                                        type="number"
-                                        value={detalle.ID_Producto || ''}
-                                        onChange={(e) => handleDetailChange(index, 'ID_Producto', e.target.value)}
-                                    />
+                                    <label>{detalle.Tipo === 'P' ? 'Producto' : 'Servicio'}: </label>
+                                    <select
+                                        value={selectedId || ''}
+                                        onChange={(e) => handleDetailChange(index, detalle.Tipo === 'P' ? 'ID_Producto' : 'ID_Servicio', e.target.value)}
+                                    >
+                                        <option value="">Selecciona una opción</option>
+                                        {opciones.map(option => (
+                                            <option key={option.ID_Producto || option.ID_Servicio} value={option.ID_Producto || option.ID_Servicio}>
+                                                {option.Nombre_Producto || option.Nombre} - Q{option.Precio_Unitario || option.Precio}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
-                            ) : (
-                                <div>
-                                    <label>ID Servicio: </label>
-                                    <input
-                                        type="number"
-                                        value={detalle.ID_Servicio || ''}
-                                        onChange={(e) => handleDetailChange(index, 'ID_Servicio', e.target.value)}
-                                    />
-                                </div>
-                            )}
-                            
-                            <label>Cantidad: </label>
-                            <input 
-                                type="number" 
-                                value={detalle.Cantidad} 
-                                onChange={(e) => handleDetailChange(index, 'Cantidad', e.target.value)} 
-                            />
-                            <label>Precio: </label>
-                            <input 
-                                type="number" 
-                                value={detalle.Precio} 
-                                onChange={(e) => handleDetailChange(index, 'Precio', e.target.value)} 
-                            />
-                            <button className="action-button" onClick={(e) => removeDetail(e, index)}>Eliminar Detalle</button>
-                        </div>
-                    ))
+
+                                <label>Cantidad: </label>
+                                <input 
+                                    type="number" 
+                                    value={detalle.Cantidad} 
+                                    onChange={(e) => handleDetailChange(index, 'Cantidad', e.target.value)} 
+                                />
+                                <label>Precio: </label>
+                                <input 
+                                    type="number" 
+                                    value={detalle.Precio} 
+                                    onChange={(e) => handleDetailChange(index, 'Precio', e.target.value)} 
+                                />
+                                <button className="action-button" onClick={(e) => removeDetail(e, index)}>Eliminar Detalle</button>
+                            </div>
+                        );
+                    })
                 ) : (
                     <div>No hay detalles disponibles para esta factura.</div>
                 )}
