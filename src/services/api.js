@@ -36,6 +36,11 @@ export const createMascota = (mascotaData) => {
   export const getMascotas = () => {
     return axios.get(`${API_URL}/mascotas`);
   };
+
+    // Función para listar veterinarios
+    export const getVeterinarios = () => {
+      return axios.get(`${API_URL}/veterinarios`);
+    };
   
   // Función para crear una nueva cita
   export const createCita = (citaData) => {

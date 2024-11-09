@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { createMascota } from '../../services/api';
+import React, { useState, useEffect } from 'react';
+import { createMascota, getDuenios } from '../../services/api';
 
 const CrearMascota = () => {
   const [mascota, setMascota] = useState({
@@ -9,6 +9,22 @@ const CrearMascota = () => {
     Edad: '',
     ID_Duenio: '',
   });
+
+  const [duenios, setDuenios] = useState([]);
+
+  useEffect(() => {
+    // Cargar la lista de dueños
+    const fetchDuenios = async () => {
+      try {
+        const data = await getDuenios();
+        setDuenios(data);
+      } catch (error) {
+        console.error('Error al cargar los dueños:', error);
+      }
+    };
+
+    fetchDuenios();
+  }, []);
 
   const handleChange = (e) => {
     setMascota({
@@ -65,13 +81,17 @@ const CrearMascota = () => {
         value={mascota.Edad}
         onChange={handleChange}
       />
-      <input
-        type="number"
-        name="ID_Duenio"
-        placeholder="ID del Dueño"
-        value={mascota.ID_Duenio}
-        onChange={handleChange}
-      />
+
+      <label>Dueño:</label>
+      <select name="ID_Duenio" value={mascota.ID_Duenio} onChange={handleChange}>
+        <option value="">Selecciona un dueño</option>
+        {duenios.map((duenio) => (
+          <option key={duenio.ID_Duenio} value={duenio.ID_Duenio}>
+            {duenio.Nombre}
+          </option>
+        ))}
+      </select>
+
       <button type="submit">Registrar Mascota</button>
     </form>
   );

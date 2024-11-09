@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { createCita } from '../../services/api';
+import React, { useState, useEffect } from 'react';
+import { createCita, getMascotas, getVeterinarios } from '../../services/api';
 
 const CrearCita = () => {
   const [cita, setCita] = useState({
@@ -8,6 +8,34 @@ const CrearCita = () => {
     ID_Mascota: '',
     ID_Veterinario: '',
   });
+
+  const [mascotas, setMascotas] = useState([]);
+  const [veterinarios, setVeterinarios] = useState([]);
+
+  useEffect(() => {
+    // Obtener la lista de mascotas
+    const fetchMascotas = async () => {
+      try {
+        const response = await getMascotas();
+        setMascotas(response.data);
+      } catch (error) {
+        console.error('Error al cargar mascotas:', error);
+      }
+    };
+
+    // Obtener la lista de veterinarios
+    const fetchVeterinarios = async () => {
+      try {
+        const response = await getVeterinarios();
+        setVeterinarios(response.data);
+      } catch (error) {
+        console.error('Error al cargar veterinarios:', error);
+      }
+    };
+
+    fetchMascotas();
+    fetchVeterinarios();
+  }, []);
 
   const handleChange = (e) => {
     setCita({
@@ -49,20 +77,27 @@ const CrearCita = () => {
         value={cita.Motivo}
         onChange={handleChange}
       />
-      <input
-        type="number"
-        name="ID_Mascota"
-        placeholder="ID de la Mascota"
-        value={cita.ID_Mascota}
-        onChange={handleChange}
-      />
-      <input
-        type="number"
-        name="ID_Veterinario"
-        placeholder="ID del Veterinario"
-        value={cita.ID_Veterinario}
-        onChange={handleChange}
-      />
+
+      <label>Mascota:</label>
+      <select name="ID_Mascota" value={cita.ID_Mascota} onChange={handleChange}>
+        <option value="">Selecciona una mascota</option>
+        {mascotas.map((mascota) => (
+          <option key={mascota.ID_Mascota} value={mascota.ID_Mascota}>
+            {mascota.Nombre}
+          </option>
+        ))}
+      </select>
+
+      <label>Veterinario:</label>
+      <select name="ID_Veterinario" value={cita.ID_Veterinario} onChange={handleChange}>
+        <option value="">Selecciona un veterinario</option>
+        {veterinarios.map((veterinario) => (
+          <option key={veterinario.ID_Veterinario} value={veterinario.ID_Veterinario}>
+            {veterinario.Nombre}
+          </option>
+        ))}
+      </select>
+
       <button type="submit">Registrar Cita</button>
     </form>
   );
